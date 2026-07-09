@@ -58,16 +58,41 @@
             font-size: 3.5rem;
             user-select: none;
             animation: float 2s infinite ease-in-out;
-            transition: transform 0.1s ease;
-        }
-
-        .target-item:active {
-            transform: scale(0.8);
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.05); }
+        }
+
+        /* Smash Visual Burst Effect */
+        .smash-effect {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 4px solid #ff4d4d;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-25%, -25%);
+            animation: burst 0.4s ease-out forwards;
+            z-index: 4;
+        }
+
+        .smash-effect.powerup-burst {
+            border-color: #00befa;
+            box-shadow: 0 0 15px #00befa;
+        }
+
+        @keyframes burst {
+            0% {
+                transform: scale(0.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
         }
 
         .screen {
@@ -126,215 +151,32 @@
             z-index: 5;
         }
 
-        /* Subtle Romantic Animation Styles */
-        .romantic-heart {
+        /* Romantic Floating Sentences and Hearts */
+        .romantic-element {
             position: absolute;
-            color: rgba(255, 105, 180, 0.6); /* Soft pink */
-            font-size: 1.5rem;
-            pointer-events: none;
-            z-index: 11;
-            animation: floatUp 4s linear forwards;
-        }
-
-        @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) translateX(0) scale(0.5);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-10vh) translateX(var(--drift)) scale(1.2);
-                opacity: 0;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="game-container">
-        <h1>🥚 EGG TERMINATOR 2.0 🥚</h1>
-        <p style="margin: 0; color: #aaa;">Tap to obliterate. Grab chocolate & heating pads!</p>
-        
-        <div class="stats-panel">
-            <div>Smashed: <span id="score-val">0</span></div>
-            <div>Cramp Level: <span id="cramp-val">100%</span></div>
-        </div>
-
-        <div class="egg-zone" id="egg-zone">
-            <div id="freeze-banner" class="freeze-banner">❄️ CHOCOLATE TIME: CRAMPS FROZEN! ❄️</div>
-        </div>
-    </div>
-
-    <!-- Victory Screen -->
-    <div id="win-screen" class="screen">
-        <h2 style="z-index: 12;">🏆 CRAMPS TOTALLY DESTROYED! 🏆</h2>
-        <p id="victory-text"></p>
-        <button class="win-btn" onclick="resetGame()" style="z-index: 12;">Vent More Anger (Restart)</button>
-    </div>
-
-    <script>
-        // --- 1. Audio Setup ---
-        const smashAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav');
-        const powerupAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav');
-        
-        // Note: You can replace this URL later with your hosted custom music path!
-        const winAudio = new Audio('victory.mp3');
-        <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egg Terminator 2.0</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #1d0a0a, #2d1111);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            overflow: hidden;
-            user-select: none;
-            transition: background 0.5s ease;
-        }
-
-        body.frozen {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364) !important;
-        }
-
-        .game-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin: 10px 0;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255,100,100,0.5);
-        }
-
-        .stats-panel {
-            display: flex;
-            width: 80%;
-            justify-content: space-around;
-            font-size: 1.2rem;
+            color: rgba(255, 140, 190, 0.85);
             font-weight: bold;
-        }
-
-        .egg-zone {
-            position: relative;
-            width: 100%;
-            height: 50vh;
-        }
-
-        .target-item {
-            position: absolute;
-            cursor: pointer;
-            font-size: 3.5rem;
-            user-select: none;
-            animation: float 2s infinite ease-in-out;
-            transition: transform 0.1s ease;
-        }
-
-        .target-item:active {
-            transform: scale(0.8);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .screen {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(20, 5, 5, 0.95);
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .screen.active {
-            display: flex;
-        }
-
-        .win-btn {
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
-            transition: transform 0.2s;
-        }
-
-        .win-btn:hover {
-            transform: scale(1.05);
-        }
-
-        #victory-text {
             font-size: 1.3rem;
-            width: 80%;
-            max-width: 600px;
-            line-height: 1.6;
-            margin: 20px 0;
-            z-index: 12;
-        }
-
-        .freeze-banner {
-            position: absolute;
-            background: rgba(0, 150, 255, 0.8);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            display: none;
-            z-index: 5;
-        }
-
-        /* Subtle Romantic Animation Styles */
-        .romantic-heart {
-            position: absolute;
-            color: rgba(255, 105, 180, 0.6); /* Soft pink */
-            font-size: 1.5rem;
+            white-space: nowrap;
             pointer-events: none;
             z-index: 11;
-            animation: floatUp 4s linear forwards;
+            text-shadow: 0px 2px 6px rgba(0,0,0,0.4);
+            animation: floatUp 5s linear forwards;
         }
 
         @keyframes floatUp {
             0% {
-                transform: translateY(100vh) translateX(0) scale(0.5);
+                transform: translateY(100vh) translateX(0) scale(0.6);
                 opacity: 0;
             }
-            10% {
+            15% {
                 opacity: 1;
             }
-            90% {
-                opacity: 0.8;
+            85% {
+                opacity: 0.9;
             }
             100% {
-                transform: translateY(-10vh) translateX(var(--drift)) scale(1.2);
+                transform: translateY(-15vh) translateX(var(--drift)) scale(1.1);
                 opacity: 0;
             }
         }
@@ -356,376 +198,31 @@
         </div>
     </div>
 
-    <!-- Victory Screen -->
     <div id="win-screen" class="screen">
-        <h2 style="z-index: 12;">🏆 CRAMPS TOTALLY DESTROYED! 🏆</h2>
+        <h2 style="z-index: 12; font-size: 2.2rem; color: #ff69b4; text-shadow: 0 0 15px rgba(255,105,180,0.4);">🎉 hanii won cramp is gone 🎉</h2>
         <p id="victory-text"></p>
         <button class="win-btn" onclick="resetGame()" style="z-index: 12;">Vent More Anger (Restart)</button>
     </div>
 
     <script>
-        // --- 1. Audio Setup ---
+        // --- 1. Audio Mapping Engine ---
         const smashAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav');
         const powerupAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav');
         
-        // Note: You can replace this URL later with your hosted custom music path!
-        const winAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-84.wav');
-
-        smashAudio.volume = 0.5;
-        powerupAudio.volume = 0.6;
-        winAudio.volume = 0.5;
-
-        // --- 2. Dynamic Inside Jokes Array ---
-        const victoryMessages = [
-            "The subscription to pain has been successfully cancelled! Go melt into the couch, demand chocolate, and make your partner give you a foot massage immediately.",
-            "Cramps defeated! Your official reward is to tell your partner 'chup rho' every time he tries to speak for the next 2 hours.",
-            "Victory! You have full permission to do absolutely anything you want now. If anyone asks why? Just say 'mera mann' and walk away.",
-            "Mission Accomplished. You survived the cramp apocalypse! Now go make your partner 'mar jao 1000 baar' (metaphorically, of course) until he brings you snacks.",
-            "Level Cleared! The evil cramp overlords have retreated. Your official prescription is a hot water bag, a massive chocolate bar, and zero responsibilities."
-        ];
-
-        // --- 3. Game Variables ---
-        let score = 0;
-        let crampLevel = 100;
-        let isTimeFrozen = false;
-        let heartInterval; // To clear the animation loop on restart
-        
-        const eggZone = document.getElementById('egg-zone');
-        const scoreDisplay = document.getElementById('score-val');
-        const crampDisplay = document.getElementById('cramp-val');
-        const winScreen = document.getElementById('win-screen');
-        const victoryText = document.getElementById('victory-text');
-        const freezeBanner = document.getElementById('freeze-banner');
-
-        let spawnInterval;
-        let powerupInterval;
-
-        // --- 4. Core Game Engine Loops ---
-        function startGame() {
-            spawnInterval = setInterval(spawnEgg, 900);
-            powerupInterval = setInterval(spawnPowerup, 6000); 
-            spawnEgg(); 
-        }
-
-        function spawnEgg() {
-            if (isTimeFrozen) return; 
-            createItem('🥚', 'egg');
-        }
-
-        function spawnPowerup() {
-            const types = ['🍫', '🔥']; 
-            const randomType = types[Math.floor(Math.random() * types.length)];
-            createItem(randomType, 'powerup');
-        }
-
-        function createItem(emoji, type) {
-            const item = document.createElement('div');
-            item.className = 'target-item';
-            item.innerText = emoji;
-
-            const x = Math.random() * (eggZone.clientWidth - 60);
-            const y = Math.random() * (eggZone.clientHeight - 60);
-            item.style.left = `${x}px`;
-            item.style.top = `${y}px`;
-
-            item.addEventListener('click', () => {
-                if (type === 'egg') {
-                    score++;
-                    crampLevel = Math.max(0, crampLevel - 5);
-                    try { smashAudio.cloneNode(true).play(); } catch(e){}
-                } else if (type === 'powerup') {
-                    crampLevel = Math.max(0, crampLevel - 15);
-                    try { powerupAudio.play(); } catch(e){}
-                    triggerFreezeEffect();
-                }
-
-                scoreDisplay.innerText = score;
-                crampDisplay.innerText = `${crampLevel}%`;
-                item.remove();
-
-                if (crampLevel <= 0) {
-                    triggerWin();
-                }
-            });
-
-            eggZone.appendChild(item);
-
-            setTimeout(() => {
-                if (item.parentNode) item.remove();
-            }, type === 'egg' ? 3000 : 5000);
-        }
-
-        // --- 5. Version 2.0 Freeze Logic ---
-        function triggerFreezeEffect() {
-            isTimeFrozen = true;
-            document.body.classList.add('frozen');
-            freezeBanner.style.display = 'block';
-
-            setTimeout(() => {
-                isTimeFrozen = false;
-                document.body.classList.remove('frozen');
-                freezeBanner.style.display = 'none';
-            }, 3500);
-        }
-
-        // --- 6. Romantic Hearts Animation Loop ---
-        function startHeartAnimation() {
-            heartInterval = setInterval(() => {
-                const heart = document.createElement('div');
-                heart.className = 'romantic-heart';
-                
-                // Randomize heart styles for a natural look
-                const heartsList = ['❤️', '💖', '💝', '💕', 'hanii u got it', 'hanii wins'];
-                heart.innerText = heartsList[Math.floor(Math.random() * heartsList.length)];
-                
-                heart.style.left = Math.random() * 100 + 'vw';
-                // Random side drift amount for the CSS variable
-                const drift = (Math.random() * 200 - 100) + 'px';
-                heart.style.setProperty('--drift', drift);
-                
-                // Randomize speed slightly
-                heart.style.animationDuration = (Math.random() * 2 + 3) + 's'; 
-
-                winScreen.appendChild(heart);
-
-                // Clean up heart element after it floats away
-                setTimeout(() => {
-                    heart.remove();
-                }, 5000);
-            }, 400); // Spawns a heart every 400ms
-        }
-
-        // --- 7. Dynamic Win Execution ---
-        function triggerWin() {
-            clearInterval(spawnInterval);
-            clearInterval(powerupInterval);
-            
-            document.querySelectorAll('.target-item').forEach(el => el.remove());
-            
-            try { winAudio.play(); } catch(e){}
-
-            // Randomly select her custom phrase
-            const randomMsg = victoryMessages[Math.floor(Math.random() * victoryMessages.length)];
-            victoryText.innerText = randomMsg;
-
-            winScreen.classList.add('active');
-            
-            // Fire up the romantic background hearts
-            startHeartAnimation();
-        }
-
-        // --- 8. Reset State ---
-        function resetGame() {
-            clearInterval(heartInterval);
-            // Clean up any remaining floating hearts
-            document.querySelectorAll('.romantic-heart').forEach(el => el.remove());
-
-            score = 0;
-            crampLevel = 100;
-            isTimeFrozen = false;
-            document.body.classList.remove('frozen');
-            freezeBanner.style.display = 'none';
-            scoreDisplay.innerText = score;
-            crampDisplay.innerText = '100%';
-            winScreen.classList.remove('active');
-            startGame();
-        }
-
-        // Initiate App
-        startGame();
-    </script>
-</body>
-</html>
-       <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egg Terminator 2.0</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #1d0a0a, #2d1111);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            overflow: hidden;
-            user-select: none;
-            transition: background 0.5s ease;
-        }
-
-        body.frozen {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364) !important;
-        }
-
-        .game-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin: 10px 0;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255,100,100,0.5);
-        }
-
-        .stats-panel {
-            display: flex;
-            width: 80%;
-            justify-content: space-around;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .egg-zone {
-            position: relative;
-            width: 100%;
-            height: 50vh;
-        }
-
-        .target-item {
-            position: absolute;
-            cursor: pointer;
-            font-size: 3.5rem;
-            user-select: none;
-            animation: float 2s infinite ease-in-out;
-            transition: transform 0.1s ease;
-        }
-
-        .target-item:active {
-            transform: scale(0.8);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .screen {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(20, 5, 5, 0.95);
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .screen.active {
-            display: flex;
-        }
-
-        .win-btn {
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
-            transition: transform 0.2s;
-        }
-
-        .win-btn:hover {
-            transform: scale(1.05);
-        }
-
-        #victory-text {
-            font-size: 1.3rem;
-            width: 80%;
-            max-width: 600px;
-            line-height: 1.6;
-            margin: 20px 0;
-            z-index: 12;
-        }
-
-        .freeze-banner {
-            position: absolute;
-            background: rgba(0, 150, 255, 0.8);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            display: none;
-            z-index: 5;
-        }
-
-        /* Subtle Romantic Animation Styles */
-        .romantic-heart {
-            position: absolute;
-            color: rgba(255, 105, 180, 0.6); /* Soft pink */
-            font-size: 1.5rem;
-            pointer-events: none;
-            z-index: 11;
-            animation: floatUp 4s linear forwards;
-        }
-
-        @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) translateX(0) scale(0.5);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-10vh) translateX(var(--drift)) scale(1.2);
-                opacity: 0;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="game-container">
-        <h1>🥚 EGG TERMINATOR 2.0 🥚</h1>
-        <p style="margin: 0; color: #aaa;">Tap to obliterate. Grab chocolate & heating pads!</p>
-        
-        <div class="stats-panel">
-            <div>Smashed: <span id="score-val">0</span></div>
-            <div>Cramp Level: <span id="cramp-val">100%</span></div>
-        </div>
-
-        <div class="egg-zone" id="egg-zone">
-            <div id="freeze-banner" class="freeze-banner">❄️ CHOCOLATE TIME: CRAMPS FROZEN! ❄️</div>
-        </div>
-    </div>
-
-    <!-- Victory Screen -->
-    <div id="win-screen" class="screen">
-        <h2 style="z-index: 12;">🏆 CRAMPS TOTALLY DESTROYED! 🏆</h2>
-        <p id="victory-text"></p>
-        <button class="win-btn" onclick="resetGame()" style="z-index: 12;">Vent More Anger (Restart)</button>
-    </div>
-
-    <script>
-        // --- 1. Audio Setup ---
-        const smashAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav');
-        const powerupAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav');
-        
-        // Note: You can replace this URL later with your hosted custom music path!
+        // Point this to your hosted path 'victory.mp3' when ready!
         const winAudio = new Audio('victory.mp3');
 
-        smashAudio.volume = 0.5;
-        powerupAudio.volume = 0.6;
-        winAudio.volume = 0.5;
+        smashAudio.volume = 0.6;
+        powerupAudio.volume = 0.7;
+        winAudio.volume = 0.6;
+
+        // Unlock audio system context immediately on her first click
+        function initAudioUnlock() {
+            smashAudio.play().then(() => { smashAudio.pause(); }).catch(e => console.log("Audio waiting for touch..."));
+            powerupAudio.play().then(() => { powerupAudio.pause(); }).catch(e => console.log("Audio waiting for touch..."));
+            window.removeEventListener('click', initAudioUnlock);
+        }
+        window.addEventListener('click', initAudioUnlock);
 
         // --- 2. Dynamic Inside Jokes Array ---
         const victoryMessages = [
@@ -736,11 +233,11 @@
             "Level Cleared! The evil cramp overlords have retreated. Your official prescription is a hot water bag, a massive chocolate bar, and zero responsibilities."
         ];
 
-        // --- 3. Game Variables ---
+        // --- 3. Game State Core ---
         let score = 0;
         let crampLevel = 100;
         let isTimeFrozen = false;
-        let heartInterval; // To clear the animation loop on restart
+        let animationInterval; 
         
         const eggZone = document.getElementById('egg-zone');
         const scoreDisplay = document.getElementById('score-val');
@@ -752,7 +249,7 @@
         let spawnInterval;
         let powerupInterval;
 
-        // --- 4. Core Game Engine Loops ---
+        // --- 4. Game Loop Engines ---
         function startGame() {
             spawnInterval = setInterval(spawnEgg, 900);
             powerupInterval = setInterval(spawnPowerup, 6000); 
@@ -775,19 +272,24 @@
             item.className = 'target-item';
             item.innerText = emoji;
 
-            const x = Math.random() * (eggZone.clientWidth - 60);
-            const y = Math.random() * (eggZone.clientHeight - 60);
+            const x = Math.random() * (eggZone.clientWidth - 70);
+            const y = Math.random() * (eggZone.clientHeight - 70);
             item.style.left = `${x}px`;
             item.style.top = `${y}px`;
 
-            item.addEventListener('click', () => {
+            item.addEventListener('click', (e) => {
+                createSmashRing(x, y, type);
+
                 if (type === 'egg') {
                     score++;
                     crampLevel = Math.max(0, crampLevel - 5);
-                    try { smashAudio.cloneNode(true).play(); } catch(e){}
+                    
+                    const soundClone = smashAudio.cloneNode(true);
+                    soundClone.volume = 0.6;
+                    soundClone.play().catch(err => console.log("Audio block bypass active"));
                 } else if (type === 'powerup') {
                     crampLevel = Math.max(0, crampLevel - 15);
-                    try { powerupAudio.play(); } catch(e){}
+                    try { powerupAudio.play(); } catch(err){}
                     triggerFreezeEffect();
                 }
 
@@ -807,7 +309,20 @@
             }, type === 'egg' ? 3000 : 5000);
         }
 
-        // --- 5. Version 2.0 Freeze Logic ---
+        // --- 5. Visual Ring Generator ---
+        function createSmashRing(x, y, type) {
+            const ring = document.createElement('div');
+            ring.className = 'smash-effect';
+            if (type === 'powerup') ring.classList.add('powerup-burst');
+            
+            ring.style.left = `${x}px`;
+            ring.style.top = `${y}px`;
+            eggZone.appendChild(ring);
+
+            setTimeout(() => { ring.remove(); }, 400);
+        }
+
+        // --- 6. Version 2.0 Freeze Logic ---
         function triggerFreezeEffect() {
             isTimeFrozen = true;
             document.body.classList.add('frozen');
@@ -820,57 +335,52 @@
             }, 3500);
         }
 
-        // --- 6. Romantic Hearts Animation Loop ---
-        function startHeartAnimation() {
-            heartInterval = setInterval(() => {
-                const heart = document.createElement('div');
-                heart.className = 'romantic-heart';
+        // --- 7. Floating Text / Nickname Engine ---
+        function startWinAnimations() {
+            animationInterval = setInterval(() => {
+                const element = document.createElement('div');
+                element.className = 'romantic-element';
                 
-                // Randomize heart styles for a natural look
-                const heartsList = ['❤️', '💖', '💝', '💕'];
-                heart.innerText = heartsList[Math.floor(Math.random() * heartsList.length)];
+                const floatingPool = [
+                    "hanii u got it!!! 💖", 
+                    "1, 2, 3 hanii cramps free!! 💕", 
+                    "hanii smile naa ❤️", 
+                    "💝", "💖", "❤️", "💕"
+                ];
                 
-                heart.style.left = Math.random() * 100 + 'vw';
-                // Random side drift amount for the CSS variable
-                const drift = (Math.random() * 200 - 100) + 'px';
-                heart.style.setProperty('--drift', drift);
+                element.innerText = floatingPool[Math.floor(Math.random() * floatingPool.length)];
+                element.style.left = Math.random() * 80 + 'vw';
                 
-                // Randomize speed slightly
-                heart.style.animationDuration = (Math.random() * 2 + 3) + 's'; 
+                const drift = (Math.random() * 160 - 80) + 'px';
+                element.style.setProperty('--drift', drift);
+                element.style.animationDuration = (Math.random() * 2 + 4) + 's'; 
 
-                winScreen.appendChild(heart);
+                winScreen.appendChild(element);
 
-                // Clean up heart element after it floats away
-                setTimeout(() => {
-                    heart.remove();
-                }, 5000);
-            }, 400); // Spawns a heart every 400ms
+                setTimeout(() => { element.remove(); }, 5000);
+            }, 500); 
         }
 
-        // --- 7. Dynamic Win Execution ---
+        // --- 8. Win Controller ---
         function triggerWin() {
             clearInterval(spawnInterval);
             clearInterval(powerupInterval);
             
             document.querySelectorAll('.target-item').forEach(el => el.remove());
             
-            try { winAudio.play(); } catch(e){}
+            try { winAudio.play(); } catch(err){ console.log("Win audio playing standard fallback"); }
 
-            // Randomly select her custom phrase
             const randomMsg = victoryMessages[Math.floor(Math.random() * victoryMessages.length)];
             victoryText.innerText = randomMsg;
 
             winScreen.classList.add('active');
-            
-            // Fire up the romantic background hearts
-            startHeartAnimation();
+            startWinAnimations();
         }
 
-        // --- 8. Reset State ---
+        // --- 9. State Re-initializer ---
         function resetGame() {
-            clearInterval(heartInterval);
-            // Clean up any remaining floating hearts
-            document.querySelectorAll('.romantic-heart').forEach(el => el.remove());
+            clearInterval(animationInterval);
+            document.querySelectorAll('.romantic-element').forEach(el => el.remove());
 
             score = 0;
             crampLevel = 100;
@@ -883,173 +393,7 @@
             startGame();
         }
 
-        // Initiate App
-        startGame();
-    </script>
-</body>
-</html>
-
-        smashAudio.volume = 0.5;
-        powerupAudio.volume = 0.6;
-        winAudio.volume = 0.5;
-
-        // --- 2. Dynamic Inside Jokes Array ---
-        const victoryMessages = [
-            "The subscription to pain has been successfully cancelled! Go melt into the couch, demand chocolate, and make your partner give you a foot massage immediately.",
-            "Cramps defeated! Your official reward is to tell your partner 'chup rho' every time he tries to speak for the next 2 hours.",
-            "Victory! You have full permission to do absolutely anything you want now. If anyone asks why? Just say 'mera mann' and walk away.",
-            "Mission Accomplished. You survived the cramp apocalypse! Now go make your partner 'mar jao 1000 baar' (metaphorically, of course) until he brings you snacks.",
-            "Level Cleared! The evil cramp overlords have retreated. Your official prescription is a hot water bag, a massive chocolate bar, and zero responsibilities."
-        ];
-
-        // --- 3. Game Variables ---
-        let score = 0;
-        let crampLevel = 100;
-        let isTimeFrozen = false;
-        let heartInterval; // To clear the animation loop on restart
-        
-        const eggZone = document.getElementById('egg-zone');
-        const scoreDisplay = document.getElementById('score-val');
-        const crampDisplay = document.getElementById('cramp-val');
-        const winScreen = document.getElementById('win-screen');
-        const victoryText = document.getElementById('victory-text');
-        const freezeBanner = document.getElementById('freeze-banner');
-
-        let spawnInterval;
-        let powerupInterval;
-
-        // --- 4. Core Game Engine Loops ---
-        function startGame() {
-            spawnInterval = setInterval(spawnEgg, 900);
-            powerupInterval = setInterval(spawnPowerup, 6000); 
-            spawnEgg(); 
-        }
-
-        function spawnEgg() {
-            if (isTimeFrozen) return; 
-            createItem('🥚', 'egg');
-        }
-
-        function spawnPowerup() {
-            const types = ['🍫', '🔥']; 
-            const randomType = types[Math.floor(Math.random() * types.length)];
-            createItem(randomType, 'powerup');
-        }
-
-        function createItem(emoji, type) {
-            const item = document.createElement('div');
-            item.className = 'target-item';
-            item.innerText = emoji;
-
-            const x = Math.random() * (eggZone.clientWidth - 60);
-            const y = Math.random() * (eggZone.clientHeight - 60);
-            item.style.left = `${x}px`;
-            item.style.top = `${y}px`;
-
-            item.addEventListener('click', () => {
-                if (type === 'egg') {
-                    score++;
-                    crampLevel = Math.max(0, crampLevel - 5);
-                    try { smashAudio.cloneNode(true).play(); } catch(e){}
-                } else if (type === 'powerup') {
-                    crampLevel = Math.max(0, crampLevel - 15);
-                    try { powerupAudio.play(); } catch(e){}
-                    triggerFreezeEffect();
-                }
-
-                scoreDisplay.innerText = score;
-                crampDisplay.innerText = `${crampLevel}%`;
-                item.remove();
-
-                if (crampLevel <= 0) {
-                    triggerWin();
-                }
-            });
-
-            eggZone.appendChild(item);
-
-            setTimeout(() => {
-                if (item.parentNode) item.remove();
-            }, type === 'egg' ? 3000 : 5000);
-        }
-
-        // --- 5. Version 2.0 Freeze Logic ---
-        function triggerFreezeEffect() {
-            isTimeFrozen = true;
-            document.body.classList.add('frozen');
-            freezeBanner.style.display = 'block';
-
-            setTimeout(() => {
-                isTimeFrozen = false;
-                document.body.classList.remove('frozen');
-                freezeBanner.style.display = 'none';
-            }, 3500);
-        }
-
-        // --- 6. Romantic Hearts Animation Loop ---
-        function startHeartAnimation() {
-            heartInterval = setInterval(() => {
-                const heart = document.createElement('div');
-                heart.className = 'romantic-heart';
-                
-                // Randomize heart styles for a natural look
-                const heartsList = ['❤️', '💖', '💝', '💕'];
-                heart.innerText = heartsList[Math.floor(Math.random() * heartsList.length)];
-                
-                heart.style.left = Math.random() * 100 + 'vw';
-                // Random side drift amount for the CSS variable
-                const drift = (Math.random() * 200 - 100) + 'px';
-                heart.style.setProperty('--drift', drift);
-                
-                // Randomize speed slightly
-                heart.style.animationDuration = (Math.random() * 2 + 3) + 's'; 
-
-                winScreen.appendChild(heart);
-
-                // Clean up heart element after it floats away
-                setTimeout(() => {
-                    heart.remove();
-                }, 5000);
-            }, 400); // Spawns a heart every 400ms
-        }
-
-        // --- 7. Dynamic Win Execution ---
-        function triggerWin() {
-            clearInterval(spawnInterval);
-            clearInterval(powerupInterval);
-            
-            document.querySelectorAll('.target-item').forEach(el => el.remove());
-            
-            try { winAudio.play(); } catch(e){}
-
-            // Randomly select her custom phrase
-            const randomMsg = victoryMessages[Math.floor(Math.random() * victoryMessages.length)];
-            victoryText.innerText = randomMsg;
-
-            winScreen.classList.add('active');
-            
-            // Fire up the romantic background hearts
-            startHeartAnimation();
-        }
-
-        // --- 8. Reset State ---
-        function resetGame() {
-            clearInterval(heartInterval);
-            // Clean up any remaining floating hearts
-            document.querySelectorAll('.romantic-heart').forEach(el => el.remove());
-
-            score = 0;
-            crampLevel = 100;
-            isTimeFrozen = false;
-            document.body.classList.remove('frozen');
-            freezeBanner.style.display = 'none';
-            scoreDisplay.innerText = score;
-            crampDisplay.innerText = '100%';
-            winScreen.classList.remove('active');
-            startGame();
-        }
-
-        // Initiate App
+        // Start App Loop
         startGame();
     </script>
 </body>
