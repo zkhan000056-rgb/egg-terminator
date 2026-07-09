@@ -112,6 +112,7 @@
             max-width: 600px;
             line-height: 1.6;
             margin: 20px 0;
+            z-index: 12;
         }
 
         .freeze-banner {
@@ -123,6 +124,33 @@
             font-weight: bold;
             display: none;
             z-index: 5;
+        }
+
+        /* Subtle Romantic Animation Styles */
+        .romantic-heart {
+            position: absolute;
+            color: rgba(255, 105, 180, 0.6); /* Soft pink */
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 11;
+            animation: floatUp 4s linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(var(--drift)) scale(1.2);
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -144,15 +172,17 @@
 
     <!-- Victory Screen -->
     <div id="win-screen" class="screen">
-        <h2>🏆 CRAMPS TOTALLY DESTROYED! 🏆</h2>
+        <h2 style="z-index: 12;">🏆 CRAMPS TOTALLY DESTROYED! 🏆</h2>
         <p id="victory-text"></p>
-        <button class="win-btn" onclick="resetGame()">Vent More Anger (Restart)</button>
+        <button class="win-btn" onclick="resetGame()" style="z-index: 12;">Vent More Anger (Restart)</button>
     </div>
 
     <script>
         // --- 1. Audio Setup ---
         const smashAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav');
         const powerupAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav');
+        
+        // Note: You can replace this URL later with your hosted custom music path!
         const winAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-84.wav');
 
         smashAudio.volume = 0.5;
@@ -172,6 +202,8 @@
         let score = 0;
         let crampLevel = 100;
         let isTimeFrozen = false;
+        let heartInterval; // To clear the animation loop on restart
+        
         const eggZone = document.getElementById('egg-zone');
         const scoreDisplay = document.getElementById('score-val');
         const crampDisplay = document.getElementById('cramp-val');
@@ -232,7 +264,6 @@
 
             eggZone.appendChild(item);
 
-            // Clean up old items automatically
             setTimeout(() => {
                 if (item.parentNode) item.remove();
             }, type === 'egg' ? 3000 : 5000);
@@ -244,7 +275,6 @@
             document.body.classList.add('frozen');
             freezeBanner.style.display = 'block';
 
-            // Freeze screen for 3.5 seconds
             setTimeout(() => {
                 isTimeFrozen = false;
                 document.body.classList.remove('frozen');
@@ -252,25 +282,58 @@
             }, 3500);
         }
 
-        // --- 6. Dynamic Win Execution ---
+        // --- 6. Romantic Hearts Animation Loop ---
+        function startHeartAnimation() {
+            heartInterval = setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'romantic-heart';
+                
+                // Randomize heart styles for a natural look
+                const heartsList = ['❤️', '💖', '💝', '💕'];
+                heart.innerText = heartsList[Math.floor(Math.random() * heartsList.length)];
+                
+                heart.style.left = Math.random() * 100 + 'vw';
+                // Random side drift amount for the CSS variable
+                const drift = (Math.random() * 200 - 100) + 'px';
+                heart.style.setProperty('--drift', drift);
+                
+                // Randomize speed slightly
+                heart.style.animationDuration = (Math.random() * 2 + 3) + 's'; 
+
+                winScreen.appendChild(heart);
+
+                // Clean up heart element after it floats away
+                setTimeout(() => {
+                    heart.remove();
+                }, 5000);
+            }, 400); // Spawns a heart every 400ms
+        }
+
+        // --- 7. Dynamic Win Execution ---
         function triggerWin() {
             clearInterval(spawnInterval);
             clearInterval(powerupInterval);
             
-            // Clean out remaining items on screen
             document.querySelectorAll('.target-item').forEach(el => el.remove());
             
             try { winAudio.play(); } catch(e){}
 
-            // Randomly select one of her custom quotes or dynamic rewards
+            // Randomly select her custom phrase
             const randomMsg = victoryMessages[Math.floor(Math.random() * victoryMessages.length)];
             victoryText.innerText = randomMsg;
 
             winScreen.classList.add('active');
+            
+            // Fire up the romantic background hearts
+            startHeartAnimation();
         }
 
-        // --- 7. Reset State ---
+        // --- 8. Reset State ---
         function resetGame() {
+            clearInterval(heartInterval);
+            // Clean up any remaining floating hearts
+            document.querySelectorAll('.romantic-heart').forEach(el => el.remove());
+
             score = 0;
             crampLevel = 100;
             isTimeFrozen = false;
