@@ -475,7 +475,7 @@
                 heart.className = 'romantic-heart';
                 
                 // Randomize heart styles for a natural look
-                const heartsList = ['❤️', '💖', '💝', '💕'];
+                const heartsList = ['❤️', '💖', '💝', '💕', 'hanii u got it', 'hanii wins'];
                 heart.innerText = heartsList[Math.floor(Math.random() * heartsList.length)];
                 
                 heart.style.left = Math.random() * 100 + 'vw';
@@ -721,7 +721,7 @@
         const powerupAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav');
         
         // Note: You can replace this URL later with your hosted custom music path!
-        const winAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-84.wav');
+        const winAudio = new Audio('victory.mp3');
 
         smashAudio.volume = 0.5;
         powerupAudio.volume = 0.6;
